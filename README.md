@@ -18,6 +18,18 @@ just render until morning - depending on the compression settings.
 You can have this too!  Let's get started.
 
 
+Set up folder structure
+=========
+Your folder structure will need to be made in the following way:
+1.  Set the `root_dir` to the top-level folder (e.g. C:\movies)
+2.  Create either, or both, folder(s): `Blu-Ray` and `DVD`
+3.  Under that/those, create either: `Movies` and `TV Shows`
+4.  Under that/those, create all three folders:
+    * `TO_CONVERT`
+    * `CONVERTED`
+    * `SOURCE_PROCESSED`
+
+
 Settings (settings.py)
 =========
 First, you need to open the settings.py file and make sure
@@ -28,12 +40,6 @@ you have the required binaries downloaded and placed a single folder.
     * GUI version:  https://handbrake.fr/downloads.php
 * **ffprobe.exe**
     * Part of ffmpeg: https://ffmpeg.zeranoe.com/builds/
-
-Media directory
--------------
-`root_dir`:           Needs to point to a "media folder" on your system!
-                    (ex.  "C:\BluRay_Files")
-
 
 Handbrake preset file
 -------------
