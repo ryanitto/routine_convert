@@ -24,7 +24,7 @@ import routine_convert.source as sc
 
 
 class Handbrake(object):
-    # A list containing calls to handbrake, to loop through
+    # A dictionary containing media objects (keys) and strings (values) to call in handbrake CLI.
     _clr_str_dict = {}
 
     # File format
