@@ -19,8 +19,8 @@ when finished converting, so we don't attempt to convert them the next time!)
 import os
 import subprocess
 
-import routine_convert.settings as st
-import routine_convert.source as sc
+import settings as st
+import source as sc
 
 
 class Handbrake(object):

@@ -19,8 +19,8 @@ import re
 
 import imdb
 
-import routine_convert.media as me
-import routine_convert.settings as st
+import media as me
+import settings as st
 
 
 class SourceFiles(object):

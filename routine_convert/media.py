@@ -19,7 +19,7 @@ import datetime
 import json
 import subprocess
 
-import routine_convert.settings as st
+import settings as st
 
 
 class Media(object):
