@@ -55,4 +55,4 @@ the `convert_to.py` file:
 Or, if you have an environment with this script and package
 dependencies already made, you can run the script this way:
 
-    `python C:\<python_env>\handbrake_convert\convert_to.py`
+    python C:\<python_env>\handbrake_convert\convert_to.py
