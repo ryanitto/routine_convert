@@ -26,7 +26,7 @@ you have the required binaries downloaded and placed a single folder.
 * **HandBrakeCLI.exe**
     * CLI version:  https://handbrake.fr/downloads2.php
     * GUI version:  https://handbrake.fr/downloads.php
-**ffprobe.exe**
+* **ffprobe.exe**
     * Part of ffmpeg: https://ffmpeg.zeranoe.com/builds/
 
 Media directory
