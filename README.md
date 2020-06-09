@@ -29,6 +29,9 @@ Your folder structure will need to be made in the following way:
     * `CONVERTED`
     * `SOURCE_PROCESSED`
 
+An example of this structure would look like:
+    C:\media\Blu-Ray\Movies\TO_CONVERT
+
 
 Settings (settings.py)
 =========
