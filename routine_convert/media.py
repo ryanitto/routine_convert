@@ -18,11 +18,12 @@ Show (Media):       subclass for TV shows
 import datetime
 import json
 import subprocess
+import os
 
 import settings as st
 
 
-class Media(object):
+class Media:
     """
     Summary
     ---
@@ -30,10 +31,10 @@ class Media(object):
     such as title, year, disc format (DVD/blu-ray), duration, etc can be useful when converting the media and
     organizing it on a file system.
     """
-    basename = ''
-    title = ''
+    source_title = ''
     year = ''
     disc_format = ''
+    media_category = ''
 
     filename = ''
     nb_streams = 0
@@ -63,8 +64,25 @@ class Media(object):
         """
         return '__'.join([
             str(self.__class__.__name__),
-            self.title + (' ({})'.format(self.year) if self.year else '')
+            self.title + (f' ({self.year})' if self.year else '')
         ])
+
+    @property
+    def title(self):
+        # If the source file contains title metadata, go ahead and return
+        if self.source_title:
+            return self.source_title
+        # Otherwise, make one from the filename itself
+        else:
+            return self.basename.title()
+
+    @title.setter
+    def title(self, name):
+        self.source_title = name
+
+    @property
+    def basename(self):
+        return str(os.path.basename(self.filename).split('_t')[0])
 
     @staticmethod
     def _probe_media_to_dict(file_):
@@ -77,7 +95,7 @@ class Media(object):
 
         probe_args = str(st.SPC_SEP.join(
             [st.FFPROBE,
-             '-i', '"{}"'.format(file_),
+             '-i', f'"{file_}"',
              '-print_format', 'json',
              '-pretty', '-show_format'
              ]
@@ -122,7 +140,7 @@ class Movie(Media):
     ---
     Movie type.  Contains all movie-specific class variables or methods to assist in converting a motion picture.
     """
-    pass
+    media_category = st.movie_cat
 
 
 class Show(Media):
@@ -131,6 +149,8 @@ class Show(Media):
     ---
     TV show type.  Contains all specific class variables or methods to assist in converting a TV show.
     """
+    media_category = st.show_cat
+
     show_title = ''
     season = 0
     episode_title = ''

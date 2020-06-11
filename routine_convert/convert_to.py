@@ -23,42 +23,17 @@ import settings as st
 import source as sc
 
 
-class Handbrake(object):
+class Handbrake:
+    # TODO: Movies working for now, TV shows still need work (some shows have a file per episode, some don't
+    #  and instead... lump a few together in one file!)
+    # source_files = sc.SourceFiles().media
+    source_files = sc.SourceFiles().movies
+
     # A dictionary containing media objects (keys) and strings (values) to call in handbrake CLI.
     _clr_str_dict = {}
 
-    # File format
-    container = "av_mkv"
-    ext = "mkv"
-
-    # Handbrake presets. The JSON preset file for Handbrake follows a convention of <category>/<preset-name>
-    # - Category (e.g.  General, Web, Devices, Matroska...)
-    # - Preset name (e.g.  Very Fast 1080p30, Android 1080p30...)
-    presets = {
-        "DVD": r'/'.join([
-            "Ryan",  # category
-            "(Ryan) Apple 480p - Surround - 265 (Very Slow)"  # preset name
-        ]),
-        "Blu-Ray": r'/'.join([
-            "Ryan",  # category
-            "(Ryan) Apple 1080p - Surround - 265 (Very Slow)"  # preset name
-        ]),
-    }
-
-    process_dirs = {
-        'source': 'TO_CONVERT',  # Media ready for conversion
-        'output': 'CONVERTED',  # Completed converted files, for review
-        'old_source': 'SOURCE_PROCESSED',  # Media source moved into folder, no longer queued
-    }
-
-    # source_files = sc.SourceFiles().media
-    source_files = sc.SourceFiles().movies  # For now, just converting movies!
-
-    # ======================================================================================
-    def __init__(self):
-        pass
-
-    def get_output_from_source_path(self, source: str) -> str:
+    @staticmethod
+    def get_output_from_source_path(source: str) -> str:
         """
         Summary
         ---
@@ -67,9 +42,10 @@ class Handbrake(object):
         :param source: str - filepath to the media location
         :return: str - output_folder
         """
-        return source.replace(self.process_dirs['source'], self.process_dirs['output'])
+        return source.replace(st.process_dirs[st.source_key], st.process_dirs[st.output_key])
 
-    def get_processed_from_source_path(self, source: str) -> str:
+    @staticmethod
+    def get_processed_from_source_path(source: str) -> str:
         """
         Summary
         ---
@@ -78,7 +54,7 @@ class Handbrake(object):
         :param source: str - filepath to the media location
         :return: str - output_folder
         """
-        return source.replace(self.process_dirs['source'], self.process_dirs['old_source'])
+        return source.replace(st.process_dirs[st.source_key], st.process_dirs[st.old_source_key])
 
     def make_cli_str_from_media(self, media_list=None):
         """
@@ -89,14 +65,13 @@ class Handbrake(object):
         """
         if media_list:
             for m in media_list:
-                output_media_name = m.title + '.{}'.format(self.ext)
+                output_media_name = m.title + f'.{st.ext}'
                 output_dir = os.path.dirname(self.get_output_from_source_path(m.filename))
                 media_out = os.path.join(output_dir, output_media_name)
-                preset = self.presets[m.disc_format]
+                preset = st.presets[m.disc_format]
 
-                cli_str = '"{}" --preset-import-file "{}" -i "{}" --preset "{}" -o "{}" -f "{}"'.format(
-                    st.HB_BIN, st.PRESET_FILE, m.filename, preset, media_out, self.container
-                )
+                cli_str = f'"{st.HB_BIN}" --preset-import-file "{st.PRESET_FILE}" ' \
+                          f'-i "{m.filename}" --preset "{preset}" -o "{media_out}" -f "{st.container}"'
 
                 self._clr_str_dict[m] = cli_str
         return self._clr_str_dict
@@ -114,11 +89,17 @@ class Handbrake(object):
             process = subprocess.run(v, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
 
             if process.returncode:
-                print("=======================ENCODING FAILED=========================\n{}".format(k))
-                print("=======================ENCODING FAILED=========================")
+                enc_fail_msg = '=======================ENCODING FAILED========================='
+                print(f"{enc_fail_msg}\n{m.filename}\n{enc_fail_msg}")
             else:
                 # Move old source file
                 os.rename(m.filename, self.get_processed_from_source_path(m.filename))
+        else:
+            print('>>> No files found to convert!\n'
+                  'Make sure you have media placed in your "TO_CONVERT" folder(s).\n'
+                  'If you do not have any folder structure set up, make sure to\n'
+                  'run this batch file FIRST:\n\n\t'
+                  r'\routine_convert\bin\create_paths.bat')
 
     def run(self):
         """
@@ -133,5 +114,6 @@ class Handbrake(object):
 
 
 if __name__ == "__main__":
+    # For running this as a script in CLI, to begin conversion
     hb = Handbrake()
     hb.run()

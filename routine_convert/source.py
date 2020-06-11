@@ -21,24 +21,24 @@ import imdb
 
 import media as me
 import settings as st
+import folder_hierarchy as fh
 
 
-class SourceFiles(object):
+class SourceFiles:
     media_on_disk = []
 
-    # OPTIONAL: Added files to convert
-    movie_files = []
-
-    # Media type and it's associated class.
-    # Example: since TV shows have additional info than movies, different subclasses will be used for them
-    media_types = {
-        'Movies': me.Movie,
-        'TV Shows': me.Show
-    }
+    # Media (objects) to identify when walking through folders
+    media_types = [
+        me.Movie,
+        me.Show,
+    ]
 
     # Instance IMDb package (to grab movie or TV show info)
     # (http://www.imdb.com)
     ia = imdb.IMDb()
+
+    # Instance (folder) hierarchy, based off settings, to determine where to seek media
+    folders = fh.Hierarchy()
 
     @staticmethod
     def make_title(sentence):
@@ -64,7 +64,7 @@ class SourceFiles(object):
         """
         media_objects = []
 
-        for df in st.DISC_FORMATS.values():
+        for df, df_path in self.folders.disc_paths.items():
             # Initial sub-folder (disc format) off of the "media root" folder
             # ex:
             #
@@ -72,11 +72,10 @@ class SourceFiles(object):
             #           \DVD        <-
             #           \Blu-Ray    <-
             #
-            disc_type_path = os.path.join(st.root_dir, df)
-            if os.path.exists(disc_type_path):
-                media_objects += self._get_media_objects_from_directory(disc_type_path, disc_format=df)
+            if os.path.exists(df_path):
+                media_objects += self._get_media_objects_from_directory(df_path, disc_format=df)
             else:
-                raise FileExistsError('Media directory does not exist for in directory: {}'.format(disc_type_path))
+                raise FileExistsError('Media directory does not exist for in directory: {}'.format(df_path))
 
         return media_objects
 
@@ -91,7 +90,7 @@ class SourceFiles(object):
         """
         found_media = []
 
-        for media_type_as_name, media_obj in self.media_types.items():
+        for media_obj in self.media_types:
             # Look in media sub-folder, which will be underneath a disc format folder
             # ex:
             #
@@ -103,21 +102,23 @@ class SourceFiles(object):
             #              \TV Shows    <-
             #              \Movies      <-
             #
-            full_media_path = os.path.join(dir_, media_type_as_name)
+            cat = media_obj.media_category
+            source_path = os.path.join(dir_, st.media_categories[cat], st.process_dirs[st.source_key])
 
-            for fm in os.walk(full_media_path):
+            for fm in os.walk(source_path):
                 for base_m in fm[-1]:
                     found_file = os.path.normpath(os.path.join(fm[0], base_m))
 
                     # Use associated class, for the sub-folder name (Movies -> Movie class, TV Shows -> Show class...)
                     media = media_obj(found_file)
                     if disc_format:
+                        # Associate the disc format, so we can use an ideal compression for the media type
                         media.disc_format = disc_format
                     found_media.append(media)
 
         return found_media
 
-    def media_grabber(self, *args, **kwargs):
+    def get_media_wrapper(self, *args, **kwargs):
         """
         Summary
         ---
@@ -138,20 +139,13 @@ class SourceFiles(object):
         return wrapper
 
     @property
-    @media_grabber
+    @get_media_wrapper
     def media(self):
         return self.media_on_disk
 
     @media.setter
-    def media(self, refresh):
-        """
-        Summary
-        ---
-        If media property is set to a value, perform another fetch of media on disk.
-
-        :return: None
-        """
-        if refresh:
+    def media(self, fetch):
+        if fetch:
             self.media_on_disk = self._get_media_on_disk()
 
     @property
