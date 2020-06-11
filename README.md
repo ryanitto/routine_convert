@@ -51,7 +51,7 @@ Set up folder structure
 
 From script
 --
-Included in the `\routine_convert\bin\` folder is a `create_paths.bat` file.  Replace the `C:\path\to\python\python.exe` location with your installed python location, where this packaged is installed.
+Included in the `\routine_convert\bin\` folder is a `create_paths.bat` file.  Replace the `C:\path\to\python\python.exe` location with your installed python location, where this package is installed.
 
     \routine_convert\bin\create_paths.bat
 
@@ -76,7 +76,7 @@ To run
 
 Use included script
 --
-Included in the `\routine_convert\bin\` folder is a `convert_all_media.bat` file.  Replace the `C:\path\to\python\python.exe` location with your installed python location, where this packaged is installed.
+Included in the `\routine_convert\bin\` folder is a `convert_all_media.bat` file.  Replace the `C:\path\to\python\python.exe` location with your installed python location, where this package is installed.
 
     \routine_convert\bin\create_paths.bat
 
