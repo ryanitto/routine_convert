@@ -88,7 +88,7 @@ the `convert_to.py` file:
     REM Batch process to call from Windows Task Scheduler (taskschd.msc)
     REM ===========
     REM Call python.exe path, then the path to the "convert_to.py" script
-    C:\path\to\python\python.exe " C:\path\to\python\Lib\site-packages\routine_convert\convert_to.py"
+    C:\path\to\python\python.exe "C:\path\to\python\Lib\site-packages\routine_convert\convert_to.py"
 
 Or, if you have an environment with this script and package
 dependencies already made, you can run the script this way:
