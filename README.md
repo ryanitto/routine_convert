@@ -1,5 +1,5 @@
 Routine Convert
-===========
+==
 
 "Routine convert" compresses movies which have been backed up by
 a user, from a tool such as MakeMKV.
@@ -19,11 +19,20 @@ You can have this too!  Let's get started.
 
 
 Adjust settings
-=========
+==
 Edit settings.py
----------
-First, you need to open the settings.py file and make sure
-you have the required binaries downloaded and placed a single folder.
+--
+First, you need to open the settings.py file and make sure you have the required binaries downloaded and placed in a folder.
+
+Included on Git
+--
+The necessary binaries are included in:
+
+    \routine_convert\bin\create_paths.bat
+
+Manually
+--
+But... if you already have these binaries and would rather not download that right now, you can grab these binaries below:
 
 * **HandBrakeCLI.exe**
     * CLI version:  https://handbrake.fr/downloads2.php
@@ -32,21 +41,24 @@ you have the required binaries downloaded and placed a single folder.
     * Part of ffmpeg: https://ffmpeg.zeranoe.com/builds/
 
    Set handbrake preset file
-   -------------
+   --
    Preset file example:        `\routine_convert\bin\presets.json`
    
    In `settings.py`, set the `PRESET_FILE` variable to the presets.json file location.  An example above is provided, but this can also be generated from Handbrake GUI version (https://handbrake.fr/downloads.php) by just opening it up. :)
 
 Set up folder structure
-=========
+==
 
 From script
----------
+--
+Included in the `\routine_convert\bin\` folder is a `create_paths.bat` file.  Replace the `C:\path\to\python\python.exe` location with your installed python location, where this packaged is installed.
+
+    \routine_convert\bin\create_paths.bat
 
 Manually
----------
+--
 Your folder structure will need to be made in the following way:
-1.  In `settings.py`, set the `root_dir` to the top-level folder (e.g. `C:\media`)
+1.  In `settings.py`, set the `root_dir` to your top-level folder (e.g. `C:\media`)
 2.  Create either, or both, folder(s): `Blu-Ray` and `DVD`
 3.  Under that/those, create either: `Movies` and `TV Shows`
 4.  Under that/those, create all three folders:
@@ -60,7 +72,16 @@ An example of this structure would look like:
 
 
 To run
-=========
+==
+
+Use included script
+--
+Included in the `\routine_convert\bin\` folder is a `convert_all_media.bat` file.  Replace the `C:\path\to\python\python.exe` location with your installed python location, where this packaged is installed.
+
+    \routine_convert\bin\create_paths.bat
+
+Manually
+--
 Make a batch script that calls python and
 the `convert_to.py` file:
 

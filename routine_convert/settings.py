@@ -42,8 +42,8 @@ FFPROBE_TAG_STR = 'tags'
 
 # MEDIA SETTINGS
 # =================================
-# Media (MakeMKV) directories
-root_dir = r'D:\MakeMKV_Rips'
+# Media directories
+root_dir = r'C:\media'
 
 # Output ile format
 container = 'av_mkv'
